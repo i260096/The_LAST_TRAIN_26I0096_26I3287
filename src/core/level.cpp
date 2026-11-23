@@ -1,5 +1,8 @@
 #include "level.h"
 #include "util.h"
+#include <fstream>
+// Modular implementation using primitive arrays for map parsing and verification
+
 
 const char* getEntityName(char entitySymbol){
     switch (entitySymbol){
@@ -39,4 +42,42 @@ const char* getEntityName(char entitySymbol){
             return "Nothing";
     }
 }
-// Modular implementation using primitive arrays for map parsing and verification
+
+
+
+bool loadBuildingMap(const char* filename,
+                     char horizontalConn[NUM_FLOORS][ROOMS_PER_FLOOR - 1],
+                     char roomEntities[NUM_FLOORS][ROOMS_PER_FLOOR][MAX_ENTITIES_PER_ROOM],
+                     int entityCounts[NUM_FLOORS][ROOMS_PER_FLOOR]){
+                        std::ifstream
+                        inputFile(filename);
+
+                        if (!inputFile){
+                            return false;//file not opened
+                        }
+                        
+                        for (int floor=0; floor<NUM_FLOORS; ++floor) {
+                            for (int connection=0; connection<ROOMS_PER_FLOOR-1; ++connection) {
+                                horizontalConn[floor][connection]=CONN_NONE;                            }
+                        }
+                        
+                        for (int floor=0; floor<NUM_FLOORS; ++floor) {
+                            for (int room=0; room<ROOMS_PER_FLOOR; ++room) {
+                                entityCounts[floor][room]=0;
+                                for (int entity=0; entity<MAX_ENTITIES_PER_ROOM; ++entity) {
+                                    roomEntities[floor][room][entity]=ENT_NONE;
+                                }
+                            }
+                        }
+
+                        char line[MAX_LINE_LEN];
+                        
+                        while (inputFile.getline(line, MAX_LINE_LEN)) {
+                            trimWhitespace(line);
+                            if (line[0]=='#' || line[0]=='\0') {
+                                continue; //skip comments and empty lines
+                            }
+                            //Map parsing logic
+                        }
+                        return true;
+                     }
