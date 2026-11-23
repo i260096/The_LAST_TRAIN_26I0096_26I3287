@@ -2,10 +2,8 @@
 #include <iostream>
 #include <cstdlib>
 #include <cctype>
-using namespace std;
 
 // Primitive helper utilities, clamping, and screen control
-
 
 int clampInt(int value, int min, int max) {
     if (value < min) return min;
@@ -16,17 +14,17 @@ int clampInt(int value, int min, int max) {
 
 
 bool stringEquals(const char* a, const char* b){
-    if (a == nullptr || b == nullptr) {
-        return a == b; // returns 1 if both equal else 0
+    if (a==nullptr || b==nullptr) {
+        return a==b; // returns 1 if both equal else 0
     }
     while (*a && *b) {
-        if (*a != *b) {
+        if (*a!=*b) {
             return false;
         }
         ++a;
         ++b;
     }
-    return *a == *b; // both should be at end of the string
+    return *a==*b; // both should be at end of the string
 }
 
 
@@ -42,15 +40,15 @@ void clearScreen(){
 
 
 void printHeader(const char* title){
-    std::cout << "====================\n";
-    std::cout << title << "\n";
-    std::cout << "====================\n";
+    std::cout<<"====================\n";
+    std::cout<<title << "\n";
+    std::cout<<"====================\n";
 }
 
 
 
 void trimWhitespace(char* str){
-    if (str == nullptr) return;
+    if (str==nullptr) return;
 
     //cut whitespaces at start and end
     char* start=str;
