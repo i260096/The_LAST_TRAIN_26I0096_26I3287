@@ -47,12 +47,19 @@ void printHeader(const char* title){
 
 
 
+
+bool isSpaceChar(char c) {
+    return c == ' ' || c == '\t' || c == '\r' || c == '\n';
+}
+
+
+
 void trimWhitespace(char* str){
     if (str==nullptr) return;
 
     //cut whitespaces at start and end
     char* start=str;
-    while (*start==' ') {
+    while (isSpaceChar(*start)) {
         ++start;
     }
 
@@ -62,7 +69,7 @@ void trimWhitespace(char* str){
     }
 
     // terminate string after last character 
-    while (end>start && *(end-1)==' ') {
+    while (end>start && isSpaceChar(*(end-1))) {
     --end;
     }
     *end='\0';
