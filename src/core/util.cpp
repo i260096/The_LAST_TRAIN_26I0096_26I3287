@@ -1,10 +1,19 @@
 #include "util.h"
+#include <iostream>
+#include <cstdlib>
+#include <cctype>
+using namespace std;
+
+// Primitive helper utilities, clamping, and screen control
+
 
 int clampInt(int value, int min, int max) {
     if (value < min) return min;
     if (value > max) return max;
     return value;
 }
+
+
 
 bool stringEquals(const char* a, const char* b){
     if (a == nullptr || b == nullptr) {
@@ -17,6 +26,53 @@ bool stringEquals(const char* a, const char* b){
         ++a;
         ++b;
     }
-    return *a == *b; // Both should be at the end of the string
+    return *a == *b; // both should be at end of the string
 }
-// Primitive helper utilities, clamping, and screen control
+
+
+
+void clearScreen(){
+    #ifdef _WIN32
+        std::system("cls");
+    #else
+        std::system("clear");
+    #endif  
+}
+
+
+
+void printHeader(const char* title){
+    std::cout << "====================\n";
+    std::cout << title << "\n";
+    std::cout << "====================\n";
+}
+
+
+
+void trimWhitespace(char* str){
+    if (str == nullptr) return;
+
+    //cut whitespaces at start and end
+    char* start=str;
+    while (*start==' ') {
+        ++start;
+    }
+
+    char* end=start;
+    while (*end!='\0') {
+    ++end;
+    }
+
+    // terminate string after last character 
+    while (end>start && *(end-1)==' ') {
+    --end;
+    }
+    *end='\0';
+    // shift trimmed string to beginning
+    char* read=start;
+    char* write=str;
+    while (read<end) {
+        *write++=*read++;
+    }
+    *write='\0';
+}
