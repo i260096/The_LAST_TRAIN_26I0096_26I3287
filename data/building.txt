@@ -44,3 +44,32 @@ $ = Emergency Access Card
 ^ = Cabinet / Train Key
 @ = Cat Carrier 
 & = Observation Token 
+
+
+# ==== MACHINE-READABLE MAP DATA (parsed by loadBuildingMap) ====
+# Horizontal in-floor connectors: CONN <floor> <R1-R2gap> <R2-R3gap> <R3-R4gap>
+# D=door  W=window  L=locked door  #=solid wall  _=none (lift handled separately)
+CONN F1 W _ D
+CONN F2 D _ D
+CONN F3 L W D
+CONN F4 W # D
+CONN F5 D D W
+
+# Room entities: ENTITY <floor> <room> <symbol>
+ENTITY F1 R2 <
+ENTITY F1 R4 )
+ENTITY F1 R4 )
+ENTITY F2 R3 \
+ENTITY F3 R2 4
+ENTITY F3 R2 *
+ENTITY F3 R3 ~
+ENTITY F3 R4 ;
+ENTITY F3 R4 (
+ENTITY F4 R1 !
+ENTITY F4 R2 %
+ENTITY F4 R2 $
+ENTITY F4 R3 2
+ENTITY F5 R1 7
+ENTITY F5 R1 ^
+ENTITY F5 R3 @
+ENTITY F5 R4 &

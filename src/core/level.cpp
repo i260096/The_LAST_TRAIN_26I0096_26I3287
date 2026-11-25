@@ -1,6 +1,7 @@
 #include "level.h"
 #include "util.h"
 #include <fstream>
+#include <cstring>
 // Modular implementation using primitive arrays for map parsing and verification
 
 
@@ -77,7 +78,66 @@ bool loadBuildingMap(const char* filename,
                             if (line[0]=='#' || line[0]=='\0') {
                                 continue; //skip comments and empty lines
                             }
+                            
                             //Map parsing logic
+                            
+                            char* token = std::strtok(line, "\t");
+                            if (token == nullptr) {
+                                continue; // blank line with only whitespace
+                            }
+                            
+                            //handle conn lines
+                            if (stringEquals(token, "CONN")){
+                                
+                                char* floorToken=std::strtok(nullptr, "\t");
+                                
+                                if(floorToken==nullptr){
+                                    continue; //invalid line
+                                }
+                                
+                                if (floorToken[0] != 'F' || floorToken[1] < '1' || floorToken[1] > '5' || floorToken[2] != '\0') {
+                                    continue;
+                                }
+                                
+                                int floorIndex=floorToken[1]-'1'; //convert '1'-'5' to 0-4
+                                char* gap1=std::strtok(nullptr, "\t");
+                                char* gap2=std::strtok(nullptr, "\t");
+                                char* gap3=std::strtok(nullptr, "\t");
+                                
+                                if(gap1==nullptr || gap2==nullptr || gap3==nullptr){
+                                    continue; //invalid line
+                                }
+
+                                horizontalConn[floorIndex][0]=(gap1[0]=='_') ? CONN_NONE : gap1[0];
+                                horizontalConn[floorIndex][1]=(gap2[0]=='_') ? CONN_NONE : gap2[0];
+                                horizontalConn[floorIndex][2]=(gap3[0]=='_') ? CONN_NONE : gap3[0];
+
+                                //handle entity lines
+                            } else if (stringEquals(token, "ENTITY")) {
+                                char* floorToken = std::strtok(nullptr, " \t");
+                                char* roomToken = std::strtok(nullptr, " \t");
+                                char* symbolToken = std::strtok(nullptr, " \t");
+
+                                if (floorToken == nullptr || roomToken == nullptr || symbolToken == nullptr) {
+                                    continue;
+                                }
+
+                                if (floorToken[0] != 'F' || floorToken[1] < '1' || floorToken[1] > '5' || floorToken[2] != '\0') {
+                                    continue;
+                                }
+
+                                if (roomToken[0] != 'R' || roomToken[1] < '1' || roomToken[1] > '4' || roomToken[2] != '\0') {
+                                    continue;
+                                }
+
+                                int floorIndex = floorToken[1] - '1';
+                                int roomIndex = roomToken[1] - '1';
+
+                                if (entityCounts[floorIndex][roomIndex] < MAX_ENTITIES_PER_ROOM) {
+                                    roomEntities[floorIndex][roomIndex][entityCounts[floorIndex][roomIndex]] = symbolToken[0];
+                                    entityCounts[floorIndex][roomIndex]++;
+                                }
+                            }
                         }
-                        return true;
-                     }
+                    return true;
+                 }
