@@ -81,3 +81,6 @@ void trimWhitespace(char* str){
     }
     *write='\0';
 }
+
+
+#tallal  
