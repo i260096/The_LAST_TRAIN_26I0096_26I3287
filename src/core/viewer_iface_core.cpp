@@ -78,12 +78,13 @@ void renderObjectivesChecklist(const bool objectives[NUM_OBJECTIVES]){
 
 void renderAsciiBuilding(int playerFloor, int playerRoom){
     for (int floor=5; floor>=1; floor--){
-        cout<<"F"<<floor<<endl;
+        cout<<"F["<<floor<<"]: ";
         for (int room=1; room<=4; room++){
             if (floor==playerFloor && room==playerRoom)
                 cout<<"[P]"<<endl;
             else
-                cout<<"[R"<<room<<"]"<<endl;
+                cout<<"[R"<<room<<"]";
             }
         }
-    }
+        cout<<endl;
+}
