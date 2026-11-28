@@ -29,3 +29,23 @@ void renderDashboard(int playerFloor, int playerRoom, int energy, int time, int 
                             }
                         }
                      }
+
+
+
+void renderRoomDetails(int floor, int room,
+                       const char roomEntities[NUM_FLOORS][ROOMS_PER_FLOOR][MAX_ENTITIES_PER_ROOM],
+                       int entityCount){
+                        cout<<"Current Floor: "<<floor<<", Room: "<<room<<endl;
+
+                        if (entityCount==0) {
+                            cout<<"The Room Is Empty"<<endl;
+                        }
+                        else {
+                            cout<<"Entities in this room: "<<endl;
+                            for (int i=0; i<entityCount; ++i) {
+                                cout<<getEntityName(roomEntities[floor-1][room-1][i])<<endl;
+                            }
+                        }
+
+
+                       }
