@@ -72,3 +72,18 @@ void renderObjectivesChecklist(const bool objectives[NUM_OBJECTIVES]){
     cout<<"15. Mission Won: "<<(objectives[OBJ_MISSION_WON] ? "[X]" : "[ ]")<<endl;
     cout<<"16. Mission Failed: "<<(objectives[OBJ_MISSION_FAILED] ? "[X]" : "[ ]")<<endl;
 }
+
+
+
+
+void renderAsciiBuilding(int playerFloor, int playerRoom){
+    for (int floor=5; floor>=1; floor--){
+        cout<<"F"<<floor<<endl;
+        for (int room=1; room<=4; room++){
+            if (floor==playerFloor && room==playerRoom)
+                cout<<"[P]"<<endl;
+            else
+                cout<<"[R"<<room<<"]"<<endl;
+            }
+        }
+    }
