@@ -1,4 +1,31 @@
 #include "viewer_iface.h"
 #include "util.h"
+#include "level.h"
+#include <iostream>
+using namespace std;
 
 // Terminal UI and dashboard rendering using primitive parameters
+
+void renderDashboard(int playerFloor, int playerRoom, int energy, int time, int score,
+                     const char inventory[MAX_INVENTORY_CAPACITY], int inventoryCount,
+                     int emergencyTripsLeft){
+                        cout<<"THE LAST TRAIN"<<endl;
+                        cout<<"Location: Floor "<<playerFloor<<", Room "<<playerRoom<<endl;
+                        cout<<"Energy: "<<energy<<"/100"<<endl;
+                        cout<<"Time: "<<time<<"/50"<<endl;
+                        cout<<"Score: "<<score<<endl;
+                        cout<<"Emergency Lift 2 Trips Left: "<<emergencyTripsLeft<<endl;
+                        cout<<"Inventory: "<<endl;
+
+                        if (inventoryCount==0) {
+                            cout<<"None";
+                        }
+                        else {
+                            for (int i=0; i<inventoryCount; ++i) {
+                                cout<<getEntityName(inventory[i]);
+                                if (i<inventoryCount-1) {
+                                    cout<<", ";
+                                }
+                            }
+                        }
+                     }
