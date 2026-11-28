@@ -2,6 +2,8 @@
 #include "util.h"
 #include <fstream>
 #include <cstring>
+#include <cstdlib>
+
 // Modular implementation using primitive arrays for map parsing and verification
 
 
@@ -89,7 +91,7 @@ bool loadBuildingMap(const char* filename,
                             //handle conn lines
                             if (stringEquals(token, "CONN")){
                                 
-                                char* floorToken=std::strtok(nullptr, "\t");
+                                char* floorToken=std::strtok(nullptr, " \t");
                                 
                                 if(floorToken==nullptr){
                                     continue; //invalid line
@@ -100,9 +102,9 @@ bool loadBuildingMap(const char* filename,
                                 }
                                 
                                 int floorIndex=floorToken[1]-'1'; //convert '1'-'5' to 0-4
-                                char* gap1=std::strtok(nullptr, "\t");
-                                char* gap2=std::strtok(nullptr, "\t");
-                                char* gap3=std::strtok(nullptr, "\t");
+                                char* gap1=std::strtok(nullptr, " \t");
+                                char* gap2=std::strtok(nullptr, " \t");
+                                char* gap3=std::strtok(nullptr, " \t");
                                 
                                 if(gap1==nullptr || gap2==nullptr || gap3==nullptr){
                                     continue; //invalid line
@@ -114,30 +116,89 @@ bool loadBuildingMap(const char* filename,
 
                                 //handle entity lines
                             } else if (stringEquals(token, "ENTITY")) {
-                                char* floorToken = std::strtok(nullptr, " \t");
-                                char* roomToken = std::strtok(nullptr, " \t");
-                                char* symbolToken = std::strtok(nullptr, " \t");
+                                char* floorToken=std::strtok(nullptr, " \t");
+                                char* roomToken=std::strtok(nullptr, " \t");
+                                char* symbolToken=std::strtok(nullptr, " \t");
 
-                                if (floorToken == nullptr || roomToken == nullptr || symbolToken == nullptr) {
+                                if (floorToken==nullptr || roomToken==nullptr || symbolToken==nullptr) {
                                     continue;
                                 }
 
-                                if (floorToken[0] != 'F' || floorToken[1] < '1' || floorToken[1] > '5' || floorToken[2] != '\0') {
+                                if (floorToken[0]!='F' || floorToken[1]<'1' || floorToken[1]>'5' || floorToken[2]!='\0') {
                                     continue;
                                 }
 
-                                if (roomToken[0] != 'R' || roomToken[1] < '1' || roomToken[1] > '4' || roomToken[2] != '\0') {
+                                if (roomToken[0]!='R' || roomToken[1]<'1' || roomToken[1]>'4' || roomToken[2]!='\0') {
                                     continue;
                                 }
 
-                                int floorIndex = floorToken[1] - '1';
-                                int roomIndex = roomToken[1] - '1';
+                                int floorIndex=floorToken[1] - '1';
+                                int roomIndex=roomToken[1] - '1';
 
                                 if (entityCounts[floorIndex][roomIndex] < MAX_ENTITIES_PER_ROOM) {
-                                    roomEntities[floorIndex][roomIndex][entityCounts[floorIndex][roomIndex]] = symbolToken[0];
+                                    roomEntities[floorIndex][roomIndex][entityCounts[floorIndex][roomIndex]]=symbolToken[0];
                                     entityCounts[floorIndex][roomIndex]++;
                                 }
                             }
                         }
                     return true;
                  }
+
+
+
+bool loadInitialState(const char* filename,
+                      int& playerFloor, int& playerRoom,
+                      int& energy, int& time, int& score,
+                      char inventory[MAX_INVENTORY_CAPACITY], int& inventoryCount,
+                      bool objectives[NUM_OBJECTIVES], int& emergencyTripsLeft){
+                        playerFloor=1;
+                        playerRoom=1;
+                        energy=INITIAL_ENERGY;
+                        time=INITIAL_TIME;
+                        score=INITIAL_SCORE;
+                        inventoryCount=0;
+                        emergencyTripsLeft=0;
+
+                        for (int i=0; i<MAX_INVENTORY_CAPACITY; ++i) {
+                            inventory[i]=ENT_NONE;
+                        }
+
+                        for (int i=0; i<NUM_OBJECTIVES; ++i) {
+                            objectives[i]=false;
+                        }
+
+                        std::ifstream inputFile(filename);
+                        if (!inputFile) {
+                            return false; //file not opened
+                        }
+
+                        char line[MAX_LINE_LEN];
+                        while (inputFile.getline(line, MAX_LINE_LEN)) {
+                            trimWhitespace(line);
+                            if (line[0]=='#' || line[0]=='\0') {
+                                continue; //skip comments and empty lines
+                            }
+
+                            char* colonPos=std::strchr(line, ':');
+                            if (colonPos==nullptr) {
+                                continue; //invalid line
+                            }
+
+                            *colonPos='\0'; //split the line into key and value
+                            char* key=line;
+                            char* value=colonPos+1;
+                            trimWhitespace(key);
+                            trimWhitespace(value);
+
+                            if (stringEquals(key, "INITIAL_ENERGY")) {
+                                energy = std::atoi(value);
+                            } else if (stringEquals(key, "INITIAL_TIME")) {
+                                time = std::atoi(value);
+                            } else if (stringEquals(key, "INITIAL_SCORE")) {
+                                score = std::atoi(value);
+                            }
+                            
+                        }
+
+                        return true;
+}
